@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHA-256 Hash Generator</title>
+</head>
+<body>
+    <h2>SHA-256 Hash Generator</h2>
+    <label for="input">Enter Text:</label>
+    <input type="text" id="input">
+    <button onclick="generateHash()">Generate Hash</button>
+    <p id="hashResult"></p>
+
+    <script>
+        function generateHash() {
+            const input = document.getElementById('input').value;
+            sha256(input)
+                .then(hash => {
+                    document.getElementById('hashResult').textContent = 'SHA-256 Hash: ' + hash;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('hashResult').textContent = 'Error: Unable to generate hash.';
+                });
+        }
+
+        // Function to compute SHA-256 hash
+        function sha256(input) {
+            return crypto.subtle.digest('SHA-256', new TextEncoder().encode(input))
+                .then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(byte => ('00' + byte.toString(16)).slice(-2)).join('');
+                    return hashHex;
+                });
+        }
+    </script>
+</body>
+</html>
